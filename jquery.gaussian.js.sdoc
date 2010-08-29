@@ -1,0 +1,27 @@
+Gaussian Blur jQuery plugin | Spencer Tipping
+Licensed under the terms of the MIT source code license
+
+Introduction.
+This plugin provides a gaussian() method for DOM elements. It uses the element's position as the center and can be parameterized by the blur width (the 'c' parameter in the Gaussian function,
+http://en.wikipedia.org/wiki/Gaussian_function). Integration is performed to make sure that the area under the curve is roughly one; thus, the limit as c -> 0 is the original element.
+
+Elements may be blurred directionally in one or two dimensions. For the two-dimensional case, the blur is convolved across each directional vector. Since each integral will be one, the
+integral of the convolution will also be one.
+
+By the way, the continuous Gaussian function used here is not quite optimal. A better one is the discrete Gaussian function based on the complex-valued Bessel function. However, the Gaussian
+is easier to implement so I'm using that instead. It's only a web UI, after all :)
+
+(function () {
+  var gaussian_function  = function (c, x)     {return Math.exp (-(x * x) / (2.0 * c * c))},
+      linear_sequence    = function (x0, d, n) {var xs = []; for (var i = 0; i < n; ++i) xs.push (x0 + i * d); return xs},
+      centered_sequence  = function (d, n)     {return linear_sequence (-d * n / 2.0, d, n)},
+      gaussian_sequence  = function (c, n)     {return $.map (centered_sequence (c * 2.0 / n, n), function (x) {return gaussian_function (c, x)})},
+
+      do_gaussian_blur   = function (e, direction, extent) {
+        
+      };
+
+  $.fn.gaussian = function (options) {
+    
+  };
+}) ();
