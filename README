@@ -1,0 +1,13 @@
+jQuery Gaussian blur plugin
+
+Blurs elements in a particular direction. To blur horizontally, for example, you can do this:
+
+  $('selector').gaussian ({dx: 10, n: 10});
+
+To achieve circular blurring you need to blur once horizontally and then blur vertically:
+
+  $('selector').gaussian ({dx: 5, n: 5}).gaussian ({dy: 5, n: 5});
+
+You can remove blurring from an element and restore the original by invoking gaussian(null):
+
+  $('selector').gaussian (null);
