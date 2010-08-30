@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Gaussian Blur</title>
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js'></script>
+    <script src='jquery.gaussian.js'></script>
+
+    <script>
+      $(function () {
+        $('#blurred').gaussian({dx: 10, n: 10}).gaussian({dy: 10, n: 10});
+      });
+    </script>
+  </head>
+
+  <body>
+    <h1 id='blurred'>Blur Test</h1>
+    <a href='javascript:$("#blurred").gaussian(null)'>Unblur</a>
+  </body>
+</html>
