@@ -45,7 +45,9 @@ Gaussian is easier to implement so I'm using that instead. It's only a web UI, a
   The gaussian() function.
   This is the jQuery interface function. gaussian() replaces each matched element by an array of clones designed to create a blurring effect. The new elements will have the class
   'gaussian-clone' in addition to any classes the original element had. The original element is not removed from the document, but hidden. Calling gaussian() on an already-blurred element will
-  blur each of the clones, allowing for multiple-vector convolution.
+  blur each of the clones, allowing for multiple-vector convolution. For example:
+
+  | $('div').gaussian({dx: 5, n: 10}).           // Blur 10 pixels along x axis, using 10 copies (radius is 5px)
 
   As a special case, you can pass in null as the options hash to unblur an element. This removes all clones from the document and restores the original to a visible state. It removes clones
   from all subsequent blurring as well.
@@ -59,6 +61,31 @@ Gaussian is easier to implement so I'm using that instead. It's only a web UI, a
   $.fn.gaussian = function (options) {
     return $(this).each (options === null ? unblur
                                           : function (i, e) {$(e).data('gaussian-clones') ? $(e).data('gaussian-clones').each (function () {$(this).gaussian (options)})
-                                                                                          : $(e).data ('gaussian-clones', do_gaussian_blur (e, options.n || 5, options.dx || 0, options.dy || 0)).
-                                                                                                  css ({visibility: 'hidden'})})};
+                                                                                          : $(e).data('gaussian-clones', do_gaussian_blur (e, options.n || 5, options.dx || 0, options.dy || 0)).
+                                                                                                  css({visibility: 'hidden'})})};
+
+  The gaussians() function.
+  Returns the elements that are used to represent the blurred element. This is basically the clones, plus any clones of theirs. This function doesn't take any options, and it doesn't include
+  the element on which it was called.
+
+  $.fn.gaussians = function () {var collection = $(); this.each(function () {var xs = $(this).data('gaussian-clones') || [];
+                                                                             for (var i = 0, l = xs.length; i < l; ++i) collection = collection.add(xs[i]).add($(xs[i]).gaussians())});
+                                return collection};
+
+  The motionblur() function.
+  This function moves the element, blurring it as it is moving. When the animation finishes the blur is removed. It takes two positional options, 'left' and 'top', which specify the position
+  the element should move to. It also optionally takes an 'n' to provide to the gaussian() function (by default this is 8) and a 'sharpness' that determines what fraction of the distance is
+  used to blur. By default elements have a sharpness of 10. Other optional parameters are 'speed', which is passed into jQuery's animate() function, 'easing', which is also passed into
+  animate(), and 'callback', which is invoked after the animation and unblurring are complete.
+
+  All positions are relative to the offset parent, not to the document.
+
+  $.fn.motionblur = function (options) {
+    return $(this).each (function () {var p = $(this).position(), dx = options.left - p.left, dy = options.top - p.top;
+                                      $(this).gaussian({dx: dx / (options.sharpness || 10), dy: dy / (options.sharpness || 10), n: options.n || 8}).gaussians().add(this).
+                                                   css({position: 'absolute'}).
+                                               animate({left: (dx >= 0 ? '+=' : '-=') + Math.abs(dx), top: (dy > 0 ? '+=' : '-=') + Math.abs(dy)},
+                                                       options.speed || $.fx.speeds._default, options.easing || 'swing', function () {
+                                                                                                                           $(this).gaussian(null).css({left: options.left, top: options.top});
+                                                                                                                           options.callback && options.callback.call(this)})})};
 }) (jQuery);

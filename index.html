@@ -6,17 +6,27 @@
 
     <script>
       $(function () {
-        $('#blurred').gaussian({dx: 10, n: 10}).gaussian({dy: 10, n: 10});
+        var going = false;
+        $(document).click(function (e) {
+          going || (going = $('h1').motionblur({left: e.pageX, top: e.pageY, sharpness: Number($('#sharpness').val()), n: Number($('#clones').val()), speed: 'slow',
+                                                callback: function () {going = false}}));
+        });
       });
     </script>
+
+    <style>
+      body {font-family: sans-serif}
+      input {border: solid 1px #888}
+      a {color: #35a}
+    </style>
   </head>
 
   <body>
     <h1 id='blurred'>Blur Test</h1>
-    <a href='javascript:void($("#blurred").gaussian(null))'>Unblur</a>
 
-    <p>
-    For something more useful, check out the <a href='http://github.com/spencertipping/jquery.gaussian'>Github repo</a> or visit the <a href='sdoc.html'>documented source code</a>.
-    </p>
+    <p>Click somewhere on the page to see something cool happen.</p>
+    <p>Sharpness: <input id='sharpness' value='10' /></p>
+    <p>Clones: <input id='clones' value='8' /></p>
+    <p>For something more useful, check out the <a href='http://github.com/spencertipping/jquery.gaussian'>Github repo</a> or visit the <a href='sdoc.html'>documented source code</a>.</p>
   </body>
 </html>
