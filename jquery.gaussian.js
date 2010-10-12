@@ -19,7 +19,7 @@
       gaussian_sequence  = function (c, n)     {return $.map (centered_sequence (c * 6.0 / n, n), function (x) {return gaussian_function (c, x)})},
       normalized         = function (xs)       {var total = 0; $.each (xs, function (i, x) {total += x}); return $.map (xs, function (x) {return x / total})};
 
-// | do_gaussian_blur().
+//   The do_gaussian_blur() function.
 //   This function creates and returns a new array of elements, each a clone of e, and scales their opacity and offsets them by appropriate distances. dx and dy mark the extremities of the
 //   transformation (which is symmetric around the original element), and n specifies how many copies to create. The Gaussian distribution is automatically scaled such that three standard
 //   deviations are accounted for.
@@ -36,13 +36,13 @@
                                                                         css ({position: 'absolute', opacity: opacity * opacities[i], visibility: 'visible', left: p.left, top: p.top}))});
     return elements};
 
-// | unblur().
+//   The unblur() function.
 //   Removes all clones from the document and restores the visibility of the original element.
 
   var unblur = function () {$(this).data('gaussian-clones') ? $(this).css({visibility: 'visible'}).data('gaussian-clones').each (unblur) && unblur.call ($(this).removeData ('gaussian-clones'))
                                                             : $(this).filter('.gaussian-clone').remove()};
 
-// | gaussian().
+//   The gaussian() function.
 //   This is the jQuery interface function. gaussian() replaces each matched element by an array of clones designed to create a blurring effect. The new elements will have the class
 //   'gaussian-clone' in addition to any classes the original element had. The original element is not removed from the document, but hidden. Calling gaussian() on an already-blurred element will
 //   blur each of the clones, allowing for multiple-vector convolution.
@@ -51,10 +51,9 @@
 //   from all subsequent blurring as well.
 
 //   Options.
-//   | dx, dy: The horizontal and vertical components of the vector to blur with. Distance matters; the distance of the vector <dx, dy> is the distance of the 1 -> 0 opacity fade.
+//     dx, dy: The horizontal and vertical components of the vector to blur with. Distance matters; the distance of the vector <dx, dy> is the distance of the 1 -> 0 opacity fade.
 //             By default, dx = 0 and dy = 0.
-
-//   | n:      The number of clones to use.
+//     n:      The number of clones to use.
 //             By default, n = 5.
 
   $.fn.gaussian = function (options) {
